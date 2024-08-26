@@ -16,6 +16,7 @@ const { t } = useI18n()
 
 <template>
   <div>
+    <h1>这里是张跑跑的测试 PC 网站</h1>
     <div text-4xl>
       <div i-carbon-campsite inline-block />
     </div>
