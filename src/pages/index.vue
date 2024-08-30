@@ -37,9 +37,13 @@ const sendMessageToMP = () => {
   <div>
     <h1>这里是张跑跑的测试 PC 网站</h1>
 
-    <button @click="sendMessageToMP">
+    <button
+      m-3 text-sm btn
+      @click="sendMessageToMP"
+    >
       点击发送消息给小程序
     </button>
+
     <div text-4xl>
       <div i-carbon-campsite inline-block />
     </div>
