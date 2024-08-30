@@ -16,20 +16,20 @@ const { t } = useI18n()
 
 
 const sendMessageToMP = () => {
-    setTimeout(() => {
-      // @ts-ignore
-      WeixinJSBridge.invoke(
-        'invokeMiniProgramAPI',
-        {
-          args: {
-            name: "张跑跑测试" + new Date().getTime(),
-          },
-        },
-        function (res) {
-          alert('发送成功')
-        },
-      )
-    }, 2000)
+    // @ts-ignore
+    WeixinJSBridge.invoke(
+    'invokeMiniProgramAPI',
+    {
+      name: '张跑跑测试',
+      arg: {
+        time: new Date().getTime(),
+        text: '测试发送消息给小程序',
+      },
+    },
+    function (res) {
+      alert('发送成功')
+    },
+  )
 }
 </script>
 
