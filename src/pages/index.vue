@@ -12,11 +12,34 @@ function go() {
 }
 
 const { t } = useI18n()
+
+
+
+const sendMessageToMP = () => {
+    setTimeout(() => {
+      // @ts-ignore
+      WeixinJSBridge.invoke(
+        'invokeMiniProgramAPI',
+        {
+          args: {
+            name: "张跑跑测试" + new Date().getTime(),
+          },
+        },
+        function (res) {
+          alert('发送成功')
+        },
+      )
+    }, 2000)
+}
 </script>
 
 <template>
   <div>
     <h1>这里是张跑跑的测试 PC 网站</h1>
+
+    <button @click="sendMessageToMP">
+      点击发送消息给小程序
+    </button>
     <div text-4xl>
       <div i-carbon-campsite inline-block />
     </div>
