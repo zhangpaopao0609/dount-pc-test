@@ -28,7 +28,9 @@
         WeixinJSBridge.invoke(
           'invokeMiniProgramAPI',
           {
-            name: '张跑跑测试',
+            data: {
+              name: "'张跑跑测试",
+            },
           },
           function (res) {
             alert('调用 成功')
