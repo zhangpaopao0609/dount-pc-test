@@ -24,15 +24,17 @@
       wx.miniProgram.postMessage({ data: 'foo' })
       wx.miniProgram.postMessage({ data: { foo: 'bar' } })
 
-      WeixinJSBridge.invoke(
-        'invokeMiniProgramAPI',
-        {
-          name: '张跑跑测试',
-        },
-        function (res) {
-          console.log('调用成功', res)
-        },
-      )
+      setTimeout(() => {
+        WeixinJSBridge.invoke(
+          'invokeMiniProgramAPI',
+          {
+            name: '张跑跑测试',
+          },
+          function (res) {
+            alert('调用 成功')
+          },
+        )
+      }, 2000)
     </script>
 
     <script>
