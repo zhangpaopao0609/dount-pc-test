@@ -31,6 +31,8 @@ const sendMessageToMP = () => {
     },
   )
 }
+
+console.log(window.userAgent, 'paopao');
 </script>
 
 <template>
