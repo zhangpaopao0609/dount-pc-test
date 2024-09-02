@@ -24,6 +24,7 @@ const sendMessageToMP = () => {
       arg: {
         time: new Date().getTime(),
         text: '测试发送消息给小程序',
+        userAgent: window.navigator.userAgent
       },
     },
     function (res) {
@@ -32,7 +33,6 @@ const sendMessageToMP = () => {
   )
 }
 
-console.log(window.navigator.userAgent, 'paopao');
 </script>
 
 <template>
