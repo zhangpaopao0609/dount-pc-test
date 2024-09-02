@@ -32,7 +32,7 @@ const sendMessageToMP = () => {
   )
 }
 
-console.log(window.userAgent, 'paopao');
+console.log(window.navigator.userAgent, 'paopao');
 </script>
 
 <template>
