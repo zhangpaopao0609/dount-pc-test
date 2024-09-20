@@ -13,18 +13,40 @@ function go() {
 
 const { t } = useI18n()
 
-
-
 const sendMessageToMP = () => {
     // @ts-ignore
     WeixinJSBridge.invoke(
     'invokeMiniProgramAPI',
     {
-      name: '张跑跑测试',
+      name: '发送消息',
       arg: {
         time: new Date().getTime(),
         text: '测试发送消息给小程序',
-        userAgent: window.navigator.userAgent
+        userAgent: window.navigator.userAgent,
+      },
+    },
+    function (res) {
+      alert('发送成功')
+    },
+  )
+}
+
+const multiple = ref(1)
+
+const sendStringToMP = () => {
+  const html = document.documentElement.innerHTML.repeat(multiple.value);
+  const blob = new Blob([html], {type: 'text/html'});
+    // @ts-ignore
+    WeixinJSBridge.invoke(
+    'invokeMiniProgramAPI',
+    {
+      name: '发送字符串',
+      arg: {
+        time: new Date().getTime(),
+        text: '测试发送字符串给小程序',
+        userAgent: window.navigator.userAgent,
+        document: html,
+        size: blob.size
       },
     },
     function (res) {
@@ -44,6 +66,29 @@ const sendMessageToMP = () => {
       @click="sendMessageToMP"
     >
       点击发送消息给小程序
+    </button>
+
+    <div>
+      <button
+      m-3 text-sm btn
+      @click="multiple -= 1"
+    >
+      -
+    </button>
+      {{ multiple }}
+      <button
+      m-3 text-sm btn
+      @click="multiple += 1"
+    >
+      +
+    </button>
+    </div>
+
+    <button
+      m-3 text-sm btn
+      @click="sendStringToMP"
+    >
+      点击发送 document 字符串给小程序
     </button>
 
     <div text-4xl>
