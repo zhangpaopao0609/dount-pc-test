@@ -21,7 +21,7 @@ const sendTimeToMP = () => {
 
       name: '发送 UA',
       arg: {
-        time: new Date().getTime(),
+        time: Date.now(),
         text: '测试发送 UA给小程序',
       },
     },
@@ -38,7 +38,7 @@ const sendUAToMP = () => {
     {
       name: '发送 UA',
       arg: {
-        time: new Date().getTime(),
+        time: Date.now(),
         text: '测试发送 UA给小程序',
         userAgent: window.navigator.userAgent,
       },
@@ -69,7 +69,7 @@ const sendStringToMP = () => {
     {
       name: '发送字符串',
       arg: {
-        time: new Date().getTime(),
+        time: Date.now(),
         text: '测试发送字符串给小程序',
         userAgent: window.navigator.userAgent,
         document: content.value.html,
