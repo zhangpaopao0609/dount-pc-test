@@ -83,6 +83,35 @@ const sendStringToMP = () => {
   )
 }
 
+const times = ref(1)
+
+const sendMangTimesToMP = () => {
+  const sendNum = (num: number) => {
+  // @ts-ignore
+  WeixinJSBridge.invoke(
+    'invokeMiniProgramAPI',
+    {
+
+      name: '同一时间多次发送',
+      arg: {
+        time: Date.now(),
+        text: '同一时间多次发送',
+        num,
+      },
+    },
+    function (res) {
+      if(num === times.value) {
+        alert('发送成功')
+      }
+    },
+  )
+}
+
+  for (let i = 0; i < times.value; i++) {
+    sendNum(i+1)
+  }
+}
+
 </script>
 
 <template>
@@ -103,22 +132,24 @@ const sendStringToMP = () => {
 
     <div>
       <div>
-        <button m-3 text-sm btn @click="multiple -= 1">
-          -
-        </button>
-        {{ multiple }}
-        <button m-3 text-sm btn @click="multiple += 1">
-          +
-        </button>
-      </div>
-      <div>
-        输入框： <input type="text" :value="multiple" @input="(e) => multiple = Number(e.target.value)" placeholder="输入框">
-      </div>
+      输入发送的字符串倍数： <input type="text" :value="multiple" @input="(e) => multiple = Number(e.target.value)" placeholder="输入框">
     </div>
 
     <button m-3 text-sm btn @click="sendStringToMP">
       点击发送 document 字符串给小程序
     </button>
+    </div>
+
+
+    <div>
+      <div>
+      同时发送多少个： <input type="text" :value="times" @input="(e) => times = Number(e.target.value)" placeholder="输入框">
+    </div>
+
+    <button m-3 text-sm btn @click="sendMangTimesToMP">
+      点击发送同时发送 {{ times }} 个
+    </button>
+    </div>
 
     <div text-4xl>
       <div i-carbon-campsite inline-block />
