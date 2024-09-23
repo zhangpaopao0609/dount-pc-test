@@ -19,10 +19,10 @@ const sendTimeToMP = () => {
     'invokeMiniProgramAPI',
     {
 
-      name: '发送 UA',
+      name: '发送 时间',
       arg: {
         time: Date.now(),
-        text: '测试发送 UA给小程序',
+        text: '测试发送 时间 给小程序',
       },
     },
     function (res) {
