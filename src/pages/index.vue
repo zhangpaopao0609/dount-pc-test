@@ -51,15 +51,17 @@ const sendUAToMP = () => {
 
 const multiple = ref(1)
 
-const content = computed(() => {
+const content = ref({})
+
+watch(multiple, () => {
   const html = document.documentElement.innerHTML.repeat(multiple.value);
   const blob = new Blob([html], { type: 'text/html' });
 
-  return {
+  content.value= {
     html,
     blob
   }
-})
+}, { immediate: true })
 
 const sendStringToMP = () => {
 
