@@ -14,8 +14,8 @@ function go() {
 const { t } = useI18n()
 
 const sendMessageToMP = () => {
-    // @ts-ignore
-    WeixinJSBridge.invoke(
+  // @ts-ignore
+  WeixinJSBridge.invoke(
     'invokeMiniProgramAPI',
     {
       name: '发送消息',
@@ -35,9 +35,9 @@ const multiple = ref(1)
 
 const sendStringToMP = () => {
   const html = document.documentElement.innerHTML.repeat(multiple.value);
-  const blob = new Blob([html], {type: 'text/html'});
-    // @ts-ignore
-    WeixinJSBridge.invoke(
+  const blob = new Blob([html], { type: 'text/html' });
+  // @ts-ignore
+  WeixinJSBridge.invoke(
     'invokeMiniProgramAPI',
     {
       name: '发送字符串',
@@ -46,7 +46,8 @@ const sendStringToMP = () => {
         text: '测试发送字符串给小程序',
         userAgent: window.navigator.userAgent,
         document: html,
-        size: blob.size
+        sizeBytes: `${blob.size} 字节`,
+        sizeMegabytes: `${blob.size / 1024 / 1024} M`,
       },
     },
     function (res) {
@@ -61,33 +62,26 @@ const sendStringToMP = () => {
   <div>
     <h1>这里是张跑跑的测试 PC 网站</h1>
 
-    <button
-      m-3 text-sm btn
-      @click="sendMessageToMP"
-    >
+    <button m-3 text-sm btn @click="sendMessageToMP">
       点击发送消息给小程序
     </button>
 
     <div>
-      <button
-      m-3 text-sm btn
-      @click="multiple -= 1"
-    >
-      -
-    </button>
-      {{ multiple }}
-      <button
-      m-3 text-sm btn
-      @click="multiple += 1"
-    >
-      +
-    </button>
+      <div>
+        <button m-3 text-sm btn @click="multiple -= 1">
+          -
+        </button>
+        {{ multiple }}
+        <button m-3 text-sm btn @click="multiple += 1">
+          +
+        </button>
+      </div>
+      <div>
+        输入框： <input type="text" :value="multiple" @input="(e) => multiple = Number(e.target.value)" placeholder="输入框">
+      </div>
     </div>
 
-    <button
-      m-3 text-sm btn
-      @click="sendStringToMP"
-    >
+    <button m-3 text-sm btn @click="sendStringToMP">
       点击发送 document 字符串给小程序
     </button>
 
@@ -105,20 +99,11 @@ const sendStringToMP = () => {
 
     <div py-4 />
 
-    <TheInput
-      v-model="name"
-      :placeholder="t('intro.whats-your-name')"
-      autocomplete="false"
-      @keydown.enter="go"
-    />
+    <TheInput v-model="name" :placeholder="t('intro.whats-your-name')" autocomplete="false" @keydown.enter="go" />
     <label class="hidden" for="input">{{ t('intro.whats-your-name') }}</label>
 
     <div>
-      <button
-        m-3 text-sm btn
-        :disabled="!name"
-        @click="go"
-      >
+      <button m-3 text-sm btn :disabled="!name" @click="go">
         {{ t('button.go') }}
       </button>
     </div>
