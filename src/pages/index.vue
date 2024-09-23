@@ -13,15 +13,33 @@ function go() {
 
 const { t } = useI18n()
 
-const sendMessageToMP = () => {
+const sendTimeToMP = () => {
   // @ts-ignore
   WeixinJSBridge.invoke(
     'invokeMiniProgramAPI',
     {
-      name: '发送消息',
+
+      name: '发送 UA',
       arg: {
         time: new Date().getTime(),
-        text: '测试发送消息给小程序',
+        text: '测试发送 UA给小程序',
+      },
+    },
+    function (res) {
+      alert('发送成功')
+    },
+  )
+}
+
+const sendUAToMP = () => {
+  // @ts-ignore
+  WeixinJSBridge.invoke(
+    'invokeMiniProgramAPI',
+    {
+      name: '发送 UA',
+      arg: {
+        time: new Date().getTime(),
+        text: '测试发送 UA给小程序',
         userAgent: window.navigator.userAgent,
       },
     },
@@ -33,9 +51,18 @@ const sendMessageToMP = () => {
 
 const multiple = ref(1)
 
-const sendStringToMP = () => {
+const content = computed(() => {
   const html = document.documentElement.innerHTML.repeat(multiple.value);
   const blob = new Blob([html], { type: 'text/html' });
+
+  return {
+    html,
+    blob
+  }
+})
+
+const sendStringToMP = () => {
+
   // @ts-ignore
   WeixinJSBridge.invoke(
     'invokeMiniProgramAPI',
@@ -45,9 +72,9 @@ const sendStringToMP = () => {
         time: new Date().getTime(),
         text: '测试发送字符串给小程序',
         userAgent: window.navigator.userAgent,
-        document: html,
-        sizeBytes: `${blob.size} 字节`,
-        sizeMegabytes: `${blob.size / 1024 / 1024} M`,
+        document: content.value.html,
+        sizeBytes: `${content.value.blob.size} 字节`,
+        sizeMegabytes: `${content.value.blob.size / 1024 / 1024} M`,
       },
     },
     function (res) {
@@ -62,9 +89,17 @@ const sendStringToMP = () => {
   <div>
     <h1>这里是张跑跑的测试 PC 网站</h1>
 
-    <button m-3 text-sm btn @click="sendMessageToMP">
-      点击发送消息给小程序
-    </button>
+    <div>
+      <button m-3 text-sm btn @click="sendUAToMP">
+        点击发送 UA 给小程序
+      </button>
+    </div>
+
+    <div>
+      <button m-3 text-sm btn @click="sendTimeToMP">
+        点击发送 时间 给小程序
+      </button>
+    </div>
 
     <div>
       <div>
