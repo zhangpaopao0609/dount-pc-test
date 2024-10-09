@@ -13,7 +13,7 @@ function go() {
 
 const { t } = useI18n()
 
-const sendTimeToMP = () => {
+function sendTimeToMP() {
   // @ts-ignore
   WeixinJSBridge.invoke(
     'invokeMiniProgramAPI',
@@ -25,13 +25,13 @@ const sendTimeToMP = () => {
         text: '测试发送 时间 给小程序',
       },
     },
-    function (res) {
+    (res) => {
       alert('发送成功')
     },
   )
 }
 
-const sendUAToMP = () => {
+function sendUAToMP() {
   // @ts-ignore
   WeixinJSBridge.invoke(
     'invokeMiniProgramAPI',
@@ -43,10 +43,11 @@ const sendUAToMP = () => {
         userAgent: window.navigator.userAgent,
       },
     },
-    function (res) {
+    (res) => {
       alert('发送成功')
     },
   )
+  WeixinJSBridge.publish('webviewHtmlLoaded', { projectId: '121' })
 }
 
 const multiple = ref(1)
@@ -54,17 +55,16 @@ const multiple = ref(1)
 const content = ref({})
 
 watch(multiple, () => {
-  const html = document.documentElement.innerHTML.repeat(multiple.value);
-  const blob = new Blob([html], { type: 'text/html' });
+  const html = document.documentElement.innerHTML.repeat(multiple.value)
+  const blob = new Blob([html], { type: 'text/html' })
 
-  content.value= {
+  content.value = {
     html,
-    blob
+    blob,
   }
 }, { immediate: true })
 
-const sendStringToMP = () => {
-
+function sendStringToMP() {
   // @ts-ignore
   WeixinJSBridge.invoke(
     'invokeMiniProgramAPI',
@@ -79,7 +79,7 @@ const sendStringToMP = () => {
         sizeMegabytes: `${content.value.blob.size / 1024 / 1024} M`,
       },
     },
-    function (res) {
+    (res) => {
       alert('发送成功')
     },
   )
@@ -87,33 +87,32 @@ const sendStringToMP = () => {
 
 const times = ref(1)
 
-const sendMangTimesToMP = () => {
+function sendMangTimesToMP() {
   const sendNum = (num: number) => {
   // @ts-ignore
-  WeixinJSBridge.invoke(
-    'invokeMiniProgramAPI',
-    {
+    WeixinJSBridge.invoke(
+      'invokeMiniProgramAPI',
+      {
 
-      name: '同一时间多次发送',
-      arg: {
-        time: Date.now(),
-        text: '同一时间多次发送',
-        num,
+        name: '同一时间多次发送',
+        arg: {
+          time: Date.now(),
+          text: '同一时间多次发送',
+          num,
+        },
       },
-    },
-    function (res) {
-      if(num === times.value) {
-        alert('发送成功')
-      }
-    },
-  )
-}
+      (res) => {
+        if (num === times.value) {
+          alert('发送成功')
+        }
+      },
+    )
+  }
 
   for (let i = 0; i < times.value; i++) {
-    sendNum(i+1)
+    sendNum(i + 1)
   }
 }
-
 </script>
 
 <template>
@@ -134,23 +133,22 @@ const sendMangTimesToMP = () => {
 
     <div>
       <div>
-      输入发送的字符串倍数： <input type="text" :value="multiple" @input="(e) => multiple = Number(e.target.value)" placeholder="输入框">
-    </div>
+        输入发送的字符串倍数： <input type="text" :value="multiple" placeholder="输入框" @input="(e) => multiple = Number(e.target.value)">
+      </div>
 
-    <button m-3 text-sm btn @click="sendStringToMP">
-      点击发送 document 字符串给小程序
-    </button>
+      <button m-3 text-sm btn @click="sendStringToMP">
+        点击发送 document 字符串给小程序
+      </button>
     </div>
-
 
     <div>
       <div>
-      同时发送多少个： <input type="text" :value="times" @input="(e) => times = Number(e.target.value)" placeholder="输入框">
-    </div>
+        同时发送多少个： <input type="text" :value="times" placeholder="输入框" @input="(e) => times = Number(e.target.value)">
+      </div>
 
-    <button m-3 text-sm btn @click="sendMangTimesToMP">
-      点击发送同时发送 {{ times }} 个
-    </button>
+      <button m-3 text-sm btn @click="sendMangTimesToMP">
+        点击发送同时发送 {{ times }} 个
+      </button>
     </div>
 
     <div text-4xl>
