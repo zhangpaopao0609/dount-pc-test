@@ -49,6 +49,7 @@ function sendUAToMP() {
   )
   WeixinJSBridge.publish('webviewHtmlLoaded', { projectId: '121' })
   WeixinJSBridge.invoke('webviewHtmlLoaded', { projectId: '121' })
+  WeixinJSBridge.invoke('sendDataToMiniProgram', { projectId: '121: sendDataToMiniProgram' })
   console.log(WeixinJSBridge, WeixinJSBridge.sendDataToMiniProgram, 'paopao')
 }
 
