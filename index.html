@@ -43,11 +43,7 @@
             scriptEle.async = true
             scriptEle.src = url
             scriptEle.onload = () => {
-              window.WeixinJSBridge &&
-                WeixinJSBridge.invoke('invokeMiniProgramAPI', {
-                  name: 'WebviewWebSdkLoaded',
-                  arg: { projectId: param.projectId },
-                })
+              window.WeixinJSBridge && WeixinJSBridge.invoke('invokeMiniProgramAPI', { name: 'H5SdkLoaded' })
               resolve(url)
             }
             scriptEle.onerror = () => {
@@ -58,7 +54,7 @@
         }
         async function main() {
           try {
-            window.WeixinJSBridge && WeixinJSBridge.publish('webviewHtmlLoaded', { projectId: param.projectId })
+            window.WeixinJSBridge && WeixinJSBridge.invoke('invokeMiniProgramAPI', { name: 'H5HTMLLoaded' })
             sessionStorage.setItem('wxobs_start_timestamp', String(Date.now()))
             const fastestUrl = await Promise.race(SCRIPT_URLs.map((url) => loadScript(url)))
             window.__startPX && window.__startPX(param)
