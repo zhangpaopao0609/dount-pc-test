@@ -48,6 +48,8 @@ function sendUAToMP() {
     },
   )
   WeixinJSBridge.publish('webviewHtmlLoaded', { projectId: '121' })
+  WeixinJSBridge.invoke('webviewHtmlLoaded', { projectId: '121' })
+  console.log(WeixinJSBridge, WeixinJSBridge.sendDataToMiniProgram, 'paopao')
 }
 
 const multiple = ref(1)
