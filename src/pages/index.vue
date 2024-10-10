@@ -47,6 +47,7 @@ function sendUAToMP() {
       alert('发送成功')
     },
   )
+  WeixinJSBridge.invoke('invokeMiniProgramAPI', { name: 'H5HTMLLoaded' })
 }
 
 const multiple = ref(1)
