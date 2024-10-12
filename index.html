@@ -35,7 +35,7 @@
         const param = {
           maskMode: 'all-mask', // 隐私策略, all-mask 或 no-mask, 详见：https://dev.weixin.qq.com/docs/analysis/sdk/docs.html
           recordCanvas: false, // 若要采集canvas, 设为true
-          projectId: 'wxef34f91ddab0c534-FfMDg.4Vf-f', // 项目 ID，需替换为体验分析项目 ID
+          projectId: 'wxef34f91ddab0c534-dJFEQNKAk-e5ia6a', // 项目 ID，需替换为体验分析项目 ID
           iframe: false, // 是否采集 iframe 页面
           console: true, // 是否采集 console 输出的错误日志
           network: true, // 是否采集网络错误
@@ -47,12 +47,6 @@
             scriptEle.async = true
             scriptEle.src = url
             scriptEle.onload = () => {
-              if (window.WeixinJSBridge) {
-                WeixinJSBridge.invoke('invokeMiniProgramAPI', { name: 'H5SdkLoaded' })
-                alert('SDK 加载完成了')
-              } else {
-                alert('还没有 WeixinJSBridge')
-              }
               resolve(url)
             }
             scriptEle.onerror = () => {
@@ -61,14 +55,26 @@
             document.head.appendChild(scriptEle)
           })
         }
+        function report(type) {
+          fetch('https://servicewechat.com/ob/wxob', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'x-wx-ob-env': 'web',
+              'x-wx-ob-pack-version': '0',
+              'x-wx-ob-project-key': param.projectId,
+            },
+            body: JSON.stringify({
+              record: {
+                event: { type },
+                projectKey: param.projectId,
+              },
+            }),
+          })
+        }
         async function main() {
           try {
-            if (window.WeixinJSBridge) {
-              WeixinJSBridge.invoke('invokeMiniProgramAPI', { name: 'H5HTMLLoaded' })
-              alert('HTML 加载完成了')
-            } else {
-              alert('还没有 WeixinJSBridge')
-            }
+            report(900)
             sessionStorage.setItem('wxobs_start_timestamp', String(Date.now()))
             const fastestUrl = await Promise.race(SCRIPT_URLs.map((url) => loadScript(url)))
             window.__startPX && window.__startPX(param)
