@@ -59,7 +59,7 @@
         }
         async function main() {
           try {
-            if (window.WeixinJSBridge) {
+            if (WeixinJSBridge) {
               WeixinJSBridge.invoke('invokeMiniProgramAPI', { name: 'H5HTMLLoaded' })
               alert('HTML 加载完成了')
             } else {
