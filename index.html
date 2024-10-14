@@ -55,6 +55,15 @@
             document.head.appendChild(scriptEle)
           })
         }
+
+        function uuidv4() {
+          return 'xxxxx-xxxx-xxxx-xxxx-xxxxx'.replace(/[xy]/g, (c) => {
+            const r = (Math.random() * 16) | 0
+            const v = c === 'x' ? r : (r & 0x3) | 0x8
+            return v.toString(16)
+          })
+        }
+
         function report(type) {
           fetch('https://servicewechat.com/ob/wxob', {
             method: 'POST',
@@ -66,12 +75,18 @@
             },
             body: JSON.stringify({
               record: {
-                event: JSON.stringify({ type, data: {} }),
+                localUid: getLocalUid(),
+                customUid: '',
+                uuid: crypto?.randomUUID?.() ?? uuidv4(),
+                event: JSON.stringify([{ type: type }]),
+                path: '',
+                query: '{}',
                 projectKey: param.projectId,
-                uuid: '202410122059/c1895ea4-1ba7-475d-bbec-ec05bd31629f',
-                path: '/a',
                 sdkVersion: '',
                 timestamp: Date.now(),
+                webviewId: 0,
+                coslessMode: false,
+                appVersion: '0.0.1',
               },
             }),
           })
