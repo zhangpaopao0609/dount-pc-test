@@ -55,15 +55,30 @@
             document.head.appendChild(scriptEle)
           })
         }
-
-        function uuidv4() {
-          return 'xxxxx-xxxx-xxxx-xxxx-xxxxx'.replace(/[xy]/g, (c) => {
-            const r = (Math.random() * 16) | 0
-            const v = c === 'x' ? r : (r & 0x3) | 0x8
-            return v.toString(16)
-          })
+        function setUUID() {
+          const d = new Date()
+          const year = d.getFullYear().toString()
+          const month = (d.getMonth() + 1).toString().padStart(2, '0')
+          const day = d.getDate().toString().padStart(2, '0')
+          const hour = d.getHours().toString().padStart(2, '0')
+          const minute = d.getMinutes().toString().padStart(2, '0')
+          const prefix = `${year}${month}${day}${hour}${minute}`
+          sessionStorage.setItem(
+            'wxobs_uuid',
+            `${prefix}/${
+              crypto?.randomUUID?.() ??
+              'xxxxx-xxxx-xxxx-xxxx-xxxxx'.replace(/[xy]/g, (c) => {
+                const r = (Math.random() * 16) | 0
+                const v = c === 'x' ? r : (r & 0x3) | 0x8
+                return v.toString(16)
+              })
+            }`,
+          )
         }
-
+        function setReferAppId() {
+          const match = navigator.userAgent.match(/wx[a-z0-9]+/i)
+          sessionStorage.setItem('wxobs_refer_appid', match ? match[0] : '')
+        }
         function report(type) {
           fetch('https://servicewechat.com/ob/wxob', {
             method: 'POST',
@@ -75,27 +90,24 @@
             },
             body: JSON.stringify({
               record: {
-                localUid: getLocalUid(),
-                customUid: '',
-                uuid: crypto?.randomUUID?.() ?? uuidv4(),
+                uuid: sessionStorage.getItem('wxobs_uuid'),
                 event: JSON.stringify([{ type: type }]),
-                path: '',
-                query: '{}',
                 projectKey: param.projectId,
                 sdkVersion: '',
-                timestamp: Date.now(),
-                webviewId: 0,
-                coslessMode: false,
-                appVersion: '0.0.1',
+                timestamp: sessionStorage.getItem('wxobs_start_timestamp'),
+                referAppid: sessionStorage.getItem('wxobs_refer_appid'),
               },
             }),
           })
         }
         async function main() {
           try {
-            report(101)
             sessionStorage.setItem('wxobs_start_timestamp', String(Date.now()))
+            setUUID()
+            setReferAppId()
+            report(900)
             const fastestUrl = await Promise.race(SCRIPT_URLs.map((url) => loadScript(url)))
+            report(901)
             window.__startPX && window.__startPX(param)
           } catch (error) {
             console.error('Error loading scripts:', error)
