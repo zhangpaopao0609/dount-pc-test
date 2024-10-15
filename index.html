@@ -1,31 +1,33 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="apple-touch-icon" href="/pwa-192x192.png" />
-    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#00aba9" />
-    <meta name="msapplication-TileColor" content="#00aba9" />
-    <script>
-      ;(function () {
-        const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
-        const setting = localStorage.getItem('vueuse-color-scheme') || 'auto'
-        if (setting === 'dark' || (prefersDark && setting !== 'light'))
-          document.documentElement.classList.toggle('dark', true)
-      })()
-    </script>
-  </head>
-  <body class="font-sans">
-    <div id="app"></div>
-    <script type="module" src="/src/main.ts"></script>
-    <noscript> This website requires JavaScript to function properly. Please enable JavaScript to continue. </noscript>
-    <!-- <script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.3.2.js"></script> -->
-    <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
-    <script>
-      eruda.init()
-    </script>
-    <script>
-      ;(function () {
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="apple-touch-icon" href="/pwa-192x192.png" />
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#00aba9" />
+  <meta name="msapplication-TileColor" content="#00aba9" />
+  <script>
+    ; (function () {
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+      const setting = localStorage.getItem('vueuse-color-scheme') || 'auto'
+      if (setting === 'dark' || (prefersDark && setting !== 'light'))
+        document.documentElement.classList.toggle('dark', true)
+    })()
+  </script>
+</head>
+
+<body class="font-sans">
+  <div id="app"></div>
+  <script type="module" src="/src/main.ts"></script>
+  <noscript> This website requires JavaScript to function properly. Please enable JavaScript to continue. </noscript>
+  <script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.3.2.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
+  <script>
+    eruda.init()
+  </script>
+  <script>
+      ; (function () {
         'use strict'
 
         const SCRIPT_URLs = [
@@ -46,34 +48,16 @@
             scriptEle.type = 'text/javascript'
             scriptEle.async = true
             scriptEle.src = url
+
             scriptEle.onload = () => {
               resolve(url)
             }
             scriptEle.onerror = () => {
-              reject(new Error('Script load error'))
+              reject(new Error(`Script load error for ${url}`))
             }
+
             document.head.appendChild(scriptEle)
           })
-        }
-        function setUUID() {
-          const d = new Date()
-          const year = d.getFullYear().toString()
-          const month = (d.getMonth() + 1).toString().padStart(2, '0')
-          const day = d.getDate().toString().padStart(2, '0')
-          const hour = d.getHours().toString().padStart(2, '0')
-          const minute = d.getMinutes().toString().padStart(2, '0')
-          const prefix = `${year}${month}${day}${hour}${minute}`
-          sessionStorage.setItem(
-            'wxobs_uuid',
-            `${prefix}/${
-              crypto?.randomUUID?.() ??
-              'xxxxx-xxxx-xxxx-xxxx-xxxxx'.replace(/[xy]/g, (c) => {
-                const r = (Math.random() * 16) | 0
-                const v = c === 'x' ? r : (r & 0x3) | 0x8
-                return v.toString(16)
-              })
-            }`,
-          )
         }
         function report(type) {
           fetch('https://servicewechat.com/ob/wxob', {
@@ -86,22 +70,23 @@
             },
             body: JSON.stringify({
               record: {
-                uuid: sessionStorage.getItem('wxobs_uuid'),
-                event: JSON.stringify([{ type: type, userAgent: navigator.userAgent }]),
+                uuid: `${param.projectId}-${Date.now()}-${Math.random().toString().slice(-6)}`,
+                event: JSON.stringify({ type }),
                 projectKey: param.projectId,
                 sdkVersion: '',
-                timestamp: sessionStorage.getItem('wxobs_start_timestamp'),
+                path: window.location.href.replace(window.location.search, '').replace(window.location.hash, ''),
+                timestamp: Date.now(),
               },
             }),
           })
         }
         async function main() {
           try {
-            sessionStorage.setItem('wxobs_start_timestamp', String(Date.now()))
-            setUUID()
             report(900)
-            const fastestUrl = await Promise.race(SCRIPT_URLs.map((url) => loadScript(url)))
+            sessionStorage.setItem('wxobs_html_loaded_timestamp', Date.now().toString())
+            await Promise.race(SCRIPT_URLs.map(url => loadScript(url)))
             report(901)
+            sessionStorage.setItem('wxobs_sdk_loaded_timestamp', Date.now().toString())
             window.__startPX && window.__startPX(param)
           } catch (error) {
             console.error('Error loading scripts:', error)
@@ -109,6 +94,7 @@
         }
         main()
       })()
-    </script>
-  </body>
+  </script>
+</body>
+
 </html>
