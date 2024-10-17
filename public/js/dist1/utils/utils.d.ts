@@ -15,7 +15,7 @@ export declare function genPrefix(): string;
 export declare function convertKeysToCamelCase(obj: any): any;
 export declare function uuidv4(): string;
 export declare function getCurrentUrl(): [string, string];
-export declare function compareLibVersion(_v1: string, _v2: string): 1 | 0 | -1;
+export declare function compareLibVersion(_v1: string, _v2: string): 0 | 1 | -1;
 export declare function filter<T>(arr: T[], cb: (item: T) => boolean): T[];
 export declare function filterEmptys<T>(arr: T[]): (T & {})[];
 export declare function isWasmSupported(): boolean;
