@@ -1,8 +1,8 @@
 {
-  "private": true,
   "type": "module",
+  "private": true,
   "scripts": {
-    "build": "vite-ssg build",
+    "build": "vite-ssg build && node -e \"require('fs').copyFileSync('40205e4c5047f668d0b6a1243e506aa3.txt', 'dist/40205e4c5047f668d0b6a1243e506aa3.txt')\"",
     "dev": "vite --port 3333 --open",
     "lint": "eslint .",
     "preview": "vite preview",

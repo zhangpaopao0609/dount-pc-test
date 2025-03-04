@@ -1,38 +1,35 @@
 <!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="apple-touch-icon" href="/pwa-192x192.png" />
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#00aba9" />
+    <meta name="msapplication-TileColor" content="#00aba9" />
+    <script>
+      ;(function () {
+        const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        const setting = localStorage.getItem('vueuse-color-scheme') || 'auto'
+        if (setting === 'dark' || (prefersDark && setting !== 'light'))
+          document.documentElement.classList.toggle('dark', true)
+      })()
+    </script>
+  </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="apple-touch-icon" href="/pwa-192x192.png" />
-  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#00aba9" />
-  <meta name="msapplication-TileColor" content="#00aba9" />
-  <script>
-    ; (function () {
-      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
-      const setting = localStorage.getItem('vueuse-color-scheme') || 'auto'
-      if (setting === 'dark' || (prefersDark && setting !== 'light'))
-        document.documentElement.classList.toggle('dark', true)
-    })()
-  </script>
-</head>
-
-<body class="font-sans">
-  <div id="app"></div>
-  <script type="module" src="/src/main.ts"></script>
-  <noscript> This website requires JavaScript to function properly. Please enable JavaScript to continue. </noscript>
-  <script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.3.2.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
-  <script>
-    eruda.init()
-  </script>
-  <script>
-      ; (function () {
+  <body class="font-sans">
+    <div id="app"></div>
+    <script type="module" src="/src/main.ts"></script>
+    <noscript> This website requires JavaScript to function properly. Please enable JavaScript to continue. </noscript>
+    <script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.3.2.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
+    <script>
+      eruda.init()
+    </script>
+    <script>
+      ;(function () {
         'use strict'
 
-        const SCRIPT_URLs = [
-          "/js/dist1/index.dev.web.js"
-        ]
+        const SCRIPT_URLs = ['/js/dist1/px.min.js']
         const param = {
           maskMode: 'all-mask', // 隐私策略, all-mask 或 no-mask, 详见：https://dev.weixin.qq.com/docs/analysis/sdk/docs.html
           recordCanvas: false, // 若要采集canvas, 设为true
@@ -58,14 +55,7 @@
             document.head.appendChild(scriptEle)
           })
         }
-        function genUUID() {
-          const uuid = `temp/${Date.now()}-${Math.random().toString().slice(-6)}`
-          sessionStorage.setItem('wxobs_temp_report_uuid', uuid)
-          return uuid
-        }
-        function report(type, key, data) {
-          const timestamp = Date.now()
-          sessionStorage.setItem(key, timestamp.toString())
+        function report(type, value, data) {
           fetch('https://servicewechat.com/ob/sdkmonitor', {
             method: 'POST',
             headers: {
@@ -75,29 +65,36 @@
               'x-wx-ob-project-key': param.projectId,
             },
             body: JSON.stringify({
-              report_items: [{
-                session_id: genUUID(),
-                metric_type: type,
-                metric_value: 1,
-                extral_info: JSON.stringify({ path:window.location.href.replace(window.location.search, '').replace(window.location.hash, ''), data }),
-              }]
+              report_items: [
+                {
+                  session_id: `snippet/${Date.now()}-${String(Math.random()).slice(-8)}`,
+                  metric_type: type,
+                  metric_value: value,
+                  extral_info: JSON.stringify({
+                    path: window.location.href.replace(window.location.search, '').replace(window.location.hash, ''),
+                    data,
+                  }),
+                },
+              ],
             }),
           })
         }
+
         async function main() {
+          const startTime = Date.now()
           try {
-            report(900, 'wxobs_snippet_start_timestamp')
-            await Promise.any(SCRIPT_URLs.map(url => loadScript(url)))
-            report(901, 'wxobs_sdk_loaded_timestamp')
+            sessionStorage.setItem('wxobs_start_timestamp', String(startTime))
+            report(203, 1)
+            await Promise.any(SCRIPT_URLs.map((url) => loadScript(url)))
+            report(204, Date.now() - startTime)
             window.__startPX && window.__startPX(param)
           } catch (error) {
+            report(205, Date.now() - startTime, error)
             console.error('Error loading scripts:', error)
-            report(902, 'wxobs_snippet_error_timestamp', { error })
           }
         }
         main()
       })()
-  </script>
-</body>
-
+    </script>
+  </body>
 </html>
