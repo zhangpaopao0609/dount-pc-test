@@ -100,14 +100,11 @@
       ;(function () {
         'use strict'
 
-        const SCRIPT_URLs = [
-          'https://dldir1.qq.com/WechatWebDev/devPlatform/px.min.js',
-          'https://dev.weixin.qq.com/platform-console/proxy/assets/tel/px.min.js',
-        ]
+        const SCRIPT_URLs = ['https://dev.weixin.qq.com/platform-console/proxy/assets/tel/px.min.js']
         const param = {
-          maskMode: 'all-mask', // 隐私策略, all-mask 或 no-mask, 详见：https://www.npmjs.com/package/@wxobs/miniprogram-sdk#%E6%96%87%E6%A1%A3
+          maskMode: 'no-mask', // 隐私策略, all-mask 或 no-mask, 详见：https://developers.weixin.qq.com/miniprogram/analysis/experience/sdk/privacy.html
           recordCanvas: false, // 若要采集canvas, 设为true
-          projectId: 'PROJECT_ID', // 项目 ID，需替换为体验分析项目 ID
+          projectId: 'wxc7d66f0f80d04243-KGBb4mVIk-ZGs8RA', // 项目 ID，需替换为体验分析项目 ID
           iframe: false, // 是否采集 iframe 页面
           console: true, // 是否采集 console 输出的错误日志
           network: true, // 是否采集网络错误
@@ -122,7 +119,7 @@
               resolve(url)
             }
             scriptEle.onerror = () => {
-              reject(new Error(`Script load error for ${url}`))
+              reject(new Error('Script load error'))
             }
             document.head.appendChild(scriptEle)
           })
