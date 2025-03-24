@@ -113,10 +113,15 @@ function sendMangTimesToMP() {
     sendNum(i + 1)
   }
 }
+
+const gotoAlg = () => {
+  window.open('https://alg.linlove.cn/')
+}
 </script>
 
 <template>
   <div>
+    <button m-3 text-sm btn @click="gotoAlg">点击去算法</button>
     <h1>这里是张跑跑的测试 PC 网站</h1>
 
     <div>
